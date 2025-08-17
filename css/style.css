@@ -1,0 +1,377 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: white;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Login Container Styles */
+.login-container, .register-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: slideUp 0.5s ease-out;
+}
+
+.register-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Header Styles */
+.login-header, .register-header {
+    background: #93B219;
+    color: white;
+    padding: 20px 30px;
+    position: relative;
+    text-align: center;
+}
+
+.login-header h2, .register-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.close-btn:hover {
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Form Styles */
+form {
+    padding: 30px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+.input-container {
+    position: relative;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    background: #f9f9f9;
+}
+
+/* Add extra padding for password fields with icons */
+.form-group input[type="password"] {
+    padding-right: 45px;
+}
+
+/* Add padding for email fields with icons */
+.input-container input[type="email"], 
+.input-container input[type="text"], 
+.input-container input[type="tel"] {
+    padding-right: 45px;
+}
+
+.form-group input:focus, .form-group select:focus {
+    outline: none;
+    border-color: #93B219;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(147, 178, 25, 0.1);
+}
+
+.input-icon, .toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #93B219;
+    font-size: 16px;
+    z-index: 10;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: #7A9617;
+}
+
+/* Button Styles */
+.login-btn, .register-btn {
+    width: 100%;
+    background: #93B219;
+    color: white;
+    border: none;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.login-btn:hover, .register-btn:hover {
+    background: #7A9617;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(147, 178, 25, 0.4);
+}
+
+/* Additional Options */
+.additional-options {
+    display: flex;
+    padding: 0 30px 30px;
+    gap: 30px;
+}
+
+.not-member, .forgot-password {
+    flex: 1;
+}
+
+.not-member h3, .forgot-password h3 {
+    color: #333;
+    font-size: 16px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.not-member p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.not-member .register-btn {
+    background: #FF9800;
+    padding: 10px 20px;
+    font-size: 14px;
+}
+
+.not-member .register-btn:hover {
+    background: #F57C00;
+}
+
+.recover-link {
+    color: #93B219;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.recover-link:hover {
+    color: #7A9617;
+    text-decoration: underline;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.checkbox-group label {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+.terms-link {
+    color: #93B219;
+    text-decoration: none;
+}
+
+.terms-link:hover {
+    text-decoration: underline;
+}
+
+/* Login Link */
+.login-link {
+    text-align: center;
+    padding: 0 30px 30px;
+    border-top: 1px solid #eee;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.login-link p {
+    color: #666;
+    font-size: 14px;
+}
+
+.login-link-text {
+    color: #93B219;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.login-link-text:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .additional-options {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .form-row .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .login-header, .register-header {
+        padding: 15px 20px;
+    }
+    
+    .login-header h2, .register-header h2 {
+        font-size: 20px;
+    }
+    
+    form {
+        padding: 20px;
+    }
+    
+    .additional-options {
+        padding: 0 20px 20px;
+    }
+    
+    .login-link {
+        padding: 0 20px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-header h2, .register-header h2 {
+        font-size: 18px;
+    }
+    
+    form {
+        padding: 15px;
+    }
+    
+    .additional-options {
+        padding: 0 15px 15px;
+    }
+    
+    .login-link {
+        padding: 0 15px 15px;
+    }
+}
+
+/* Error and Success Messages */
+.message {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.error {
+    background-color: #ffebee;
+    border: 1px solid #f44336;
+    color: #c62828;
+}
+
+.success {
+    background-color: #e8f5e8;
+    border: 1px solid #4caf50;
+    color: #2e7d2e;
+}
+
+/* Loading States */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

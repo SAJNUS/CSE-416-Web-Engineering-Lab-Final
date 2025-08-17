@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Profile - MatrimonySite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .profile-form-container {
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .header {
+            background: #93B219;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .profile-sidebar {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .profile-photo {
+            width: 150px;
+            height: 180px;
+            background: #e8f4cb;
+            border-radius: 10px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #93B219;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .photo-placeholder {
+            text-align: center;
+            color: #93B219;
+        }
+        
+        .user-info {
+            text-align: center;
+        }
+        
+        .user-info h3 {
+            margin: 0 0 5px;
+            color: #333;
+        }
+        
+        .profile-id {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .status-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .verification-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .main-form {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .form-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            background: #93B219;
+            color: white;
+        }
+        
+        .form-content {
+            padding: 30px;
+        }
+        
+        .form-section {
+            display: none;
+        }
+        
+        .form-section.active {
+            display: block;
+        }
+        
+        .section-title {
+            color: #93B219;
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e8f4cb;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            color: #333;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #93B219;
+            box-shadow: 0 0 0 2px rgba(147, 178, 25, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .update-btn {
+            background: #93B219;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+        }
+        
+        .update-btn:hover {
+            background: #7a9916;
+        }
+        
+        .note-text {
+            color: #666;
+            font-size: 12px;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .profile-sidebar {
+                position: static;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="profile-form-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-heart"></i> MatrimonySite
+            </div>
+            <div class="user-info">
+                <a href="dashboard.html" style="color: white; text-decoration: none;">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-sidebar">
+            <div class="profile-photo" onclick="document.getElementById('photoInput').click()">
+                <div class="photo-placeholder">
+                    <i class="fas fa-camera" style="font-size: 24px; margin-bottom: 5px;"></i>
+                    <div>Add Photo</div>
+                </div>
+                <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="handlePhotoUpload(this)">
+            </div>
+            
+            <div class="user-info">
+                <h3 id="profileName">Your Name</h3>
+                <div class="profile-id" id="profileId">Profile ID: Loading...</div>
+                <div class="status-badge">INACTIVE</div>
+                
+                <div class="verification-item">
+                    <i class="fas fa-envelope-open-text"></i>
+                    <span>Account Verification</span>
+                </div>
+                <div class="verification-item">
+                    <i class="fas fa-image"></i>
+                    <span>Add Photo</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-form">
+            <div class="form-tabs">
+                <button class="tab-button active" onclick="showTab('basic')">Detailed Profile</button>
+                <button class="tab-button" onclick="showTab('preferences')">Partner Preference</button>
+            </div>
+
+            <form id="profileForm" class="form-content">
+                <!-- Basic Information Tab -->
+                <div id="basic" class="form-section active">
+                    <div class="section-title">My Basic Information & Appearance</div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="maritalStatus">Marital Status</label>
+                            <select id="maritalStatus" name="marital_status" required>
+                                <option value="">Select Marital Status</option>
+                                <option value="never_married">Never Married</option>
+                                <option value="divorced">Divorced</option>
+                                <option value="widowed">Widowed</option>
+                                <option value="separated">Separated</option>
+                            </select>
+                            <div class="note-text">can be changed only on request.If need to change please email us: info@shaadi.com</div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dateOfBirth">Date Of Birth</label>
+                            <input type="date" id="dateOfBirth" name="date_of_birth" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="haveChildren">Have Children</label>
+                            <select id="haveChildren" name="have_children">
+                                <option value="no_children">No Children</option>
+                                <option value="yes_living_together">Yes - Living Together</option>
+                                <option value="yes_not_living_together">Yes - Not Living Together</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="height">Height</label>
+                            <select id="height" name="height">
+                                <option value="">Select Height</option>
+                                <option value="4ft 5in - 135cm">4ft 5in - 135cm</option>
+                                <option value="4ft 6in - 137cm">4ft 6in - 137cm</option>
+                                <option value="4ft 7in - 140cm">4ft 7in - 140cm</option>
+                                <option value="4ft 8in - 142cm">4ft 8in - 142cm</option>
+                                <option value="4ft 9in - 145cm">4ft 9in - 145cm</option>
+                                <option value="4ft 10in - 147cm">4ft 10in - 147cm</option>
+                                <option value="4ft 11in - 150cm">4ft 11in - 150cm</option>
+                                <option value="5ft 0in - 152cm">5ft 0in - 152cm</option>
+                                <option value="5ft 1in - 155cm">5ft 1in - 155cm</option>
+                                <option value="5ft 2in - 157cm">5ft 2in - 157cm</option>
+                                <option value="5ft 3in - 160cm">5ft 3in - 160cm</option>
+                                <option value="5ft 4in - 162cm">5ft 4in - 162cm</option>
+                                <option value="5ft 5in - 165cm">5ft 5in - 165cm</option>
+                                <option value="5ft 6in - 167cm">5ft 6in - 167cm</option>
+                                <option value="5ft 7in - 170cm">5ft 7in - 170cm</option>
+                                <option value="5ft 8in - 172cm">5ft 8in - 172cm</option>
+                                <option value="5ft 9in - 175cm">5ft 9in - 175cm</option>
+                                <option value="5ft 10in - 177cm">5ft 10in - 177cm</option>
+                                <option value="5ft 11in - 180cm">5ft 11in - 180cm</option>
+                                <option value="6ft 0in - 182cm">6ft 0in - 182cm</option>
+                                <option value="6ft 1in - 185cm">6ft 1in - 185cm</option>
+                                <option value="6ft 2in - 187cm">6ft 2in - 187cm</option>
+                                <option value="6ft 3in - 190cm">6ft 3in - 190cm</option>
+                                <option value="6ft 4in - 193cm">6ft 4in - 193cm</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bodyType">Body Type</label>
+                            <select id="bodyType" name="body_type">
+                                <option value="average">Average</option>
+                                <option value="slim">Slim</option>
+                                <option value="athletic">Athletic</option>
+                                <option value="heavy">Heavy</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="complexion">Complexion</label>
+                            <select id="complexion" name="complexion">
+                                <option value="very_fair">Very Fair</option>
+                                <option value="fair">Fair</option>
+                                <option value="wheatish">Wheatish</option>
+                                <option value="dark">Dark</option>
+                                <option value="very_dark">Very Dark</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="disabilities">Disabilities</label>
+                            <select id="disabilities" name="disabilities">
+                                <option value="none">No Disability</option>
+                                <option value="physical">Physical</option>
+                                <option value="hearing">Hearing</option>
+                                <option value="visual">Visual</option>
+                                <option value="speech">Speech</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bloodGroup">Blood Group</label>
+                            <select id="bloodGroup" name="blood_group">
+                                <option value="others">Others</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="hairColor">Hair Color</label>
+                            <select id="hairColor" name="hair_color">
+                                <option value="black">Black</option>
+                                <option value="brown">Brown</option>
+                                <option value="blonde">Blonde</option>
+                                <option value="gray">Gray</option>
+                                <option value="bald">Bald</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eyeColor">Eye Color</label>
+                            <select id="eyeColor" name="eye_color">
+                                <option value="black">Black</option>
+                                <option value="brown">Brown</option>
+                                <option value="blue">Blue</option>
+                                <option value="green">Green</option>
+                                <option value="gray">Gray</option>
+                                <option value="hazel">Hazel</option>
+                                <option value="others">Others</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="zodiacSign">Zodiac Sign</label>
+                            <select id="zodiacSign" name="zodiac_sign">
+                                <option value="">Select Zodiac Sign</option>
+                                <option value="aries">Aries (21 Mar - 20 Apr)</option>
+                                <option value="taurus">Taurus (21 Apr - 21 May)</option>
+                                <option value="gemini">Gemini (22 May - 21 Jun)</option>
+                                <option value="cancer">Cancer (22 Jun - 22 Jul)</option>
+                                <option value="leo">Leo (23 Jul - 23 Aug)</option>
+                                <option value="virgo">Virgo (24 Aug - 23 Sep)</option>
+                                <option value="libra">Libra (24 Sep - 23 Oct)</option>
+                                <option value="scorpio">Scorpio (24 Oct - 22 Nov)</option>
+                                <option value="sagittarius">Sagittarius (23 Nov - 21 Dec)</option>
+                                <option value="capricorn">Capricorn (22 Dec - 20 Jan)</option>
+                                <option value="aquarius">Aquarius (21 Jan - 19 Feb)</option>
+                                <option value="pisces">Pisces (20 Feb - 20 Mar)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Education & Career</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="education">Education</label>
+                            <input type="text" id="education" name="education" placeholder="e.g., Bachelor's in Engineering">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="occupation">Occupation</label>
+                            <input type="text" id="occupation" name="occupation" placeholder="e.g., Software Engineer">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="companyName">Company Name</label>
+                            <input type="text" id="companyName" name="company_name" placeholder="e.g., Google Inc.">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="annualIncome">Annual Income</label>
+                            <select id="annualIncome" name="annual_income">
+                                <option value="">Select Income Range</option>
+                                <option value="0-2 Lakh">0 - 2 Lakh</option>
+                                <option value="2-4 Lakh">2 - 4 Lakh</option>
+                                <option value="4-6 Lakh">4 - 6 Lakh</option>
+                                <option value="6-8 Lakh">6 - 8 Lakh</option>
+                                <option value="8-10 Lakh">8 - 10 Lakh</option>
+                                <option value="10-15 Lakh">10 - 15 Lakh</option>
+                                <option value="15-20 Lakh">15 - 20 Lakh</option>
+                                <option value="20-30 Lakh">20 - 30 Lakh</option>
+                                <option value="30-50 Lakh">30 - 50 Lakh</option>
+                                <option value="50 Lakh+">50 Lakh+</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-title">Location & Cultural Details</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="currentCity">Current City</label>
+                            <input type="text" id="currentCity" name="current_city" placeholder="e.g., Mumbai">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currentState">Current State</label>
+                            <input type="text" id="currentState" name="current_state" placeholder="e.g., Maharashtra">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="motherTongue">Mother Tongue</label>
+                            <input type="text" id="motherTongue" name="mother_tongue" placeholder="e.g., Hindi">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="religion">Religion</label>
+                            <input type="text" id="religion" name="religion" placeholder="e.g., Hindu">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="caste">Caste</label>
+                            <input type="text" id="caste" name="caste" placeholder="e.g., Brahmin">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="diet">Diet</label>
+                            <select id="diet" name="diet">
+                                <option value="vegetarian">Vegetarian</option>
+                                <option value="non_vegetarian">Non-Vegetarian</option>
+                                <option value="eggetarian">Eggetarian</option>
+                                <option value="vegan">Vegan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="section-title">About Me</div>
+                    <div class="form-group">
+                        <label for="aboutMe">About Me</label>
+                        <textarea id="aboutMe" name="about_me" rows="4" placeholder="Tell something about yourself..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Partner Preferences Tab -->
+                <div id="preferences" class="form-section">
+                    <div class="section-title">Partner Preferences</div>
+                    <div class="form-group">
+                        <label for="partnerPreferences">Partner Preferences</label>
+                        <textarea id="partnerPreferences" name="partner_preferences" rows="6" placeholder="Describe your ideal partner..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="update-btn">
+                    <i class="fas fa-save"></i> Update Profile
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('.form-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Photo upload handler
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Please select a valid image file (JPEG, PNG, or GIF)');
+                    return;
+                }
+                
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File too large. Maximum size is 5MB.');
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const photoDiv = document.querySelector('.profile-photo');
+                    photoDiv.innerHTML = `<img src="${e.target.result}" alt="Profile Photo">`;
+                };
+                reader.readAsDataURL(file);
+                
+                // Upload to server
+                const formData = new FormData();
+                formData.append('photo', file);
+                
+                fetch('php/upload-photo.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Photo uploaded successfully');
+                        // Update the status badge or add photo verification
+                        updateVerificationStatus();
+                    } else {
+                        alert('Error uploading photo: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading photo:', error);
+                    alert('An error occurred while uploading the photo');
+                });
+            }
+        }
+        
+        // Update verification status
+        function updateVerificationStatus() {
+            const photoVerification = document.querySelector('.verification-item:last-child span');
+            photoVerification.innerHTML = '<i class="fas fa-check" style="color: green;"></i> Photo Added';
+        }
+
+        // Load user data on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load user basic info from session/local storage
+            const userName = sessionStorage.getItem('userName') || 'Your Name';
+            const userId = sessionStorage.getItem('userId') || Math.random().toString(36).substr(2, 9).toUpperCase();
+            
+            document.getElementById('profileName').textContent = userName;
+            document.getElementById('profileId').textContent = `Profile ID: B372673`; // You can make this dynamic
+            
+            // Load existing profile data if available
+            loadExistingProfile();
+        });
+
+        // Load existing profile data
+        function loadExistingProfile() {
+            fetch('php/get-profile.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update user info in sidebar
+                        if (data.user) {
+                            document.getElementById('profileName').textContent = 
+                                `${data.user.first_name} ${data.user.last_name}`;
+                            document.getElementById('profileId').textContent = 
+                                `Profile ID: ${data.user.profile_id}`;
+                        }
+                        
+                        // Populate form with profile data
+                        if (data.profile && Object.keys(data.profile).length > 0) {
+                            populateForm(data.profile);
+                            
+                            // Show existing photo if available
+                            if (data.profile.photo_url) {
+                                const photoDiv = document.querySelector('.profile-photo');
+                                photoDiv.innerHTML = `<img src="${data.profile.photo_url}" alt="Profile Photo">`;
+                                updateVerificationStatus();
+                            }
+                        }
+                        
+                        // Set date of birth from user data
+                        if (data.user && data.user.date_of_birth) {
+                            document.getElementById('dateOfBirth').value = data.user.date_of_birth;
+                        }
+                        
+                        // Set religion from user data
+                        if (data.user && data.user.religion) {
+                            document.getElementById('religion').value = data.user.religion;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading profile:', error);
+                });
+        }
+
+        // Populate form with existing data
+        function populateForm(data) {
+            Object.keys(data).forEach(key => {
+                const element = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
+                if (element) {
+                    element.value = data[key];
+                }
+            });
+        }
+
+        // Form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const profileData = {};
+            
+            formData.forEach((value, key) => {
+                profileData[key] = value;
+            });
+            
+            // Save to local storage (in real app, send to server)
+            localStorage.setItem('userProfile', JSON.stringify(profileData));
+            
+            // Submit to server
+            fetch('php/update-profile.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(profileData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Profile updated successfully!');
+                } else {
+                    alert('Error updating profile: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating profile');
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Profile - MatrimonySite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .profile-view-container {
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        
+        .header {
+            background: #93B219;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+        
+        .profile-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: fit-content;
+        }
+        
+        .profile-header {
+            background: linear-gradient(135deg, #93B219, #7a9916);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .profile-photo {
+            width: 120px;
+            height: 150px;
+            border-radius: 10px;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .profile-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .profile-photo-placeholder {
+            width: 100%;
+            height: 100%;
+            background: #e8f4cb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #93B219;
+            font-size: 24px;
+        }
+        
+        .profile-info {
+            padding: 20px;
+        }
+        
+        .info-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            color: #93B219;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #e8f4cb;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 8px;
+        }
+        
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        
+        .info-value {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .detail-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #93B219;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="profile-view-container">
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-heart"></i> MatrimonySite
+            </div>
+            <div class="user-info">
+                <a href="dashboard.html" style="color: white; text-decoration: none;">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="profile-container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="status-badge" id="statusBadge">INACTIVE</div>
+                <div class="profile-photo" id="profilePhoto">
+                    <div class="profile-photo-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <h2 id="profileName">Loading...</h2>
+                <p id="profileId">Profile ID: Loading...</p>
+                <p id="profileAge"></p>
+            </div>
+            
+            <div class="profile-info">
+                <div class="info-section">
+                    <div class="section-title">Basic Information</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">Height</span>
+                            <span class="info-value" id="height">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Marital Status</span>
+                            <span class="info-value" id="maritalStatus">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Religion</span>
+                            <span class="info-value" id="religion">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Mother Tongue</span>
+                            <span class="info-value" id="motherTongue">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <div class="section-title">Professional Info</div>
+                    <div class="info-item">
+                        <span class="info-label">Education</span>
+                        <span class="info-value" id="education">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Occupation</span>
+                        <span class="info-value" id="occupation">-</span>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-heart"></i> Express Interest
+                    </button>
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-envelope"></i> Send Message
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-card">
+            <h3 style="color: #93B219; margin-bottom: 20px;">Detailed Information</h3>
+            
+            <div class="info-section">
+                <div class="section-title">Physical Appearance</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Body Type</span>
+                        <span class="info-value" id="bodyType">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Complexion</span>
+                        <span class="info-value" id="complexion">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Hair Color</span>
+                        <span class="info-value" id="hairColor">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Eye Color</span>
+                        <span class="info-value" id="eyeColor">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="section-title">Location & Culture</div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Current City</span>
+                        <span class="info-value" id="currentCity">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Current State</span>
+                        <span class="info-value" id="currentState">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Diet</span>
+                        <span class="info-value" id="diet">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Zodiac Sign</span>
+                        <span class="info-value" id="zodiacSign">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <div class="section-title">About Me</div>
+                <p id="aboutMe" style="color: #666; line-height: 1.6;">-</p>
+            </div>
+            
+            <div class="info-section">
+                <div class="section-title">Partner Preferences</div>
+                <p id="partnerPreferences" style="color: #666; line-height: 1.6;">-</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProfile();
+        });
+
+        function loadProfile() {
+            fetch('php/get-profile.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        populateProfile(data);
+                    } else {
+                        console.error('Error loading profile:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading profile:', error);
+                });
+        }
+
+        function populateProfile(data) {
+            const user = data.user;
+            const profile = data.profile;
+
+            if (user) {
+                document.getElementById('profileName').textContent = `${user.first_name} ${user.last_name}`;
+                document.getElementById('profileId').textContent = `Profile ID: ${user.profile_id}`;
+                
+                // Calculate age
+                if (user.date_of_birth) {
+                    const age = calculateAge(user.date_of_birth);
+                    document.getElementById('profileAge').textContent = `${age} years old`;
+                }
+                
+                document.getElementById('religion').textContent = user.religion || '-';
+            }
+
+            if (profile) {
+                // Show photo if available
+                if (profile.photo_url) {
+                    document.getElementById('profilePhoto').innerHTML = 
+                        `<img src="${profile.photo_url}" alt="Profile Photo">`;
+                }
+
+                // Populate all profile fields
+                const fields = [
+                    'height', 'maritalStatus', 'motherTongue', 'education', 'occupation',
+                    'bodyType', 'complexion', 'hairColor', 'eyeColor', 'currentCity',
+                    'currentState', 'diet', 'zodiacSign', 'aboutMe', 'partnerPreferences'
+                ];
+
+                fields.forEach(field => {
+                    const element = document.getElementById(field);
+                    if (element && profile[field.replace(/([A-Z])/g, '_$1').toLowerCase()]) {
+                        element.textContent = formatValue(field, profile[field.replace(/([A-Z])/g, '_$1').toLowerCase()]);
+                    }
+                });
+            }
+        }
+
+        function calculateAge(dateOfBirth) {
+            const birth = new Date(dateOfBirth);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            return age;
+        }
+
+        function formatValue(field, value) {
+            // Format specific fields for better display
+            switch (field) {
+                case 'maritalStatus':
+                    return value.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                case 'bodyType':
+                case 'complexion':
+                case 'hairColor':
+                case 'eyeColor':
+                case 'diet':
+                case 'zodiacSign':
+                    return value.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                default:
+                    return value;
+            }
+        }
+    </script>
+</body>
+</html>
