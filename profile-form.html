@@ -10,15 +10,21 @@
         .profile-form-container {
             background: #f5f5f5;
             min-height: 100vh;
-            padding: 20px 0;
+            padding: 80px 0 20px 0;
         }
         
         .header {
-            background: #93B219;
-            color: white;
+            background: white;
+            color: #93B219;
             padding: 15px 0;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            z-index: 1000;
         }
         
         .header-content {
@@ -166,7 +172,7 @@
         
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
             margin-bottom: 25px;
         }
@@ -174,22 +180,25 @@
         .form-group {
             display: flex;
             flex-direction: column;
+            margin-bottom: 15px;
         }
         
         .form-group label {
             color: #333;
             font-weight: 500;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 14px;
         }
         
         .form-group input,
         .form-group select,
         .form-group textarea {
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            padding: 10px 12px;
+            border: 1px solid #93B219;
+            border-radius: 4px;
             font-size: 14px;
             transition: border-color 0.2s;
+            background: white;
         }
         
         .form-group input:focus,
@@ -228,6 +237,11 @@
             font-style: italic;
         }
         
+        /* Special styling for full-width fields */
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
         @media (max-width: 768px) {
             .profile-container {
                 grid-template-columns: 1fr;
@@ -248,12 +262,7 @@
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <i class="fas fa-heart"></i> MatrimonySite
-            </div>
-            <div class="user-info">
-                <a href="dashboard.html" style="color: white; text-decoration: none;">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
-                </a>
+                <i class="fas fa-heart"></i> Bibahabd.com
             </div>
         </div>
     </header>
@@ -269,7 +278,7 @@
             </div>
             
             <div class="user-info">
-                <h3 id="profileName">Your Name</h3>
+                <input type="text" id="profileName" placeholder="Your Name" style="text-align: center; font-size: 18px; font-weight: bold; color: #333; border: 1px solid #93B219; border-radius: 4px; padding: 8px; margin-bottom: 10px; width: 100%; box-sizing: border-box;">
                 <div class="profile-id" id="profileId">Profile ID: Loading...</div>
                 <div class="status-badge">INACTIVE</div>
                 
@@ -287,7 +296,6 @@
         <div class="main-form">
             <div class="form-tabs">
                 <button class="tab-button active" onclick="showTab('basic')">Detailed Profile</button>
-                <button class="tab-button" onclick="showTab('preferences')">Partner Preference</button>
             </div>
 
             <form id="profileForm" class="form-content">
@@ -311,6 +319,7 @@
                         <div class="form-group">
                             <label for="dateOfBirth">Date Of Birth</label>
                             <input type="date" id="dateOfBirth" name="date_of_birth" required>
+                            <div class="note-text">Auto-filled from signup data</div>
                         </div>
 
                         <div class="form-group">
@@ -501,6 +510,7 @@
                         <div class="form-group">
                             <label for="religion">Religion</label>
                             <input type="text" id="religion" name="religion" placeholder="e.g., Hindu">
+                            <div class="note-text">Auto-filled from signup data</div>
                         </div>
 
                         <div class="form-group">
@@ -520,18 +530,9 @@
                     </div>
 
                     <div class="section-title">About Me</div>
-                    <div class="form-group">
+                    <div class="form-group full-width">
                         <label for="aboutMe">About Me</label>
                         <textarea id="aboutMe" name="about_me" rows="4" placeholder="Tell something about yourself..."></textarea>
-                    </div>
-                </div>
-
-                <!-- Partner Preferences Tab -->
-                <div id="preferences" class="form-section">
-                    <div class="section-title">Partner Preferences</div>
-                    <div class="form-group">
-                        <label for="partnerPreferences">Partner Preferences</label>
-                        <textarea id="partnerPreferences" name="partner_preferences" rows="6" placeholder="Describe your ideal partner..."></textarea>
                     </div>
                 </div>
 
@@ -625,7 +626,7 @@
             const userName = sessionStorage.getItem('userName') || 'Your Name';
             const userId = sessionStorage.getItem('userId') || Math.random().toString(36).substr(2, 9).toUpperCase();
             
-            document.getElementById('profileName').textContent = userName;
+            document.getElementById('profileName').value = userName;
             document.getElementById('profileId').textContent = `Profile ID: B372673`; // You can make this dynamic
             
             // Load existing profile data if available
@@ -638,15 +639,38 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        // Update user info in sidebar
+                        // Update user info in sidebar with signup data
                         if (data.user) {
-                            document.getElementById('profileName').textContent = 
-                                `${data.user.first_name} ${data.user.last_name}`;
+                            const fullName = `${data.user.first_name} ${data.user.last_name}`;
+                            document.getElementById('profileName').value = fullName;
+                            document.getElementById('profileName').readOnly = true;
+                            document.getElementById('profileName').style.backgroundColor = '#f8f9fa';
                             document.getElementById('profileId').textContent = 
                                 `Profile ID: ${data.user.profile_id}`;
+                            
+                            // Auto-populate form fields with signup data
+                            // Date of Birth from signup
+                            if (data.user.date_of_birth) {
+                                document.getElementById('dateOfBirth').value = data.user.date_of_birth;
+                                // Make it readonly since it's from signup
+                                document.getElementById('dateOfBirth').readOnly = true;
+                                document.getElementById('dateOfBirth').style.backgroundColor = '#f8f9fa';
+                            }
+                            
+                            // Religion from signup
+                            if (data.user.religion) {
+                                // Check if religion field exists in the form
+                                const religionField = document.getElementById('religion');
+                                if (religionField) {
+                                    religionField.value = data.user.religion;
+                                    // Make it readonly or add a note
+                                    religionField.readOnly = true;
+                                    religionField.style.backgroundColor = '#f8f9fa';
+                                }
+                            }
                         }
                         
-                        // Populate form with profile data
+                        // Populate form with existing profile data (if any)
                         if (data.profile && Object.keys(data.profile).length > 0) {
                             populateForm(data.profile);
                             
@@ -657,16 +681,8 @@
                                 updateVerificationStatus();
                             }
                         }
-                        
-                        // Set date of birth from user data
-                        if (data.user && data.user.date_of_birth) {
-                            document.getElementById('dateOfBirth').value = data.user.date_of_birth;
-                        }
-                        
-                        // Set religion from user data
-                        if (data.user && data.user.religion) {
-                            document.getElementById('religion').value = data.user.religion;
-                        }
+                    } else {
+                        console.error('Error loading profile:', data.message);
                     }
                 })
                 .catch(error => {
@@ -694,6 +710,9 @@
             formData.forEach((value, key) => {
                 profileData[key] = value;
             });
+            
+            // Add the name from the sidebar
+            profileData['profile_name'] = document.getElementById('profileName').value;
             
             // Save to local storage (in real app, send to server)
             localStorage.setItem('userProfile', JSON.stringify(profileData));
