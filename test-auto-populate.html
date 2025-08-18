@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Auto-Population</title>
+</head>
+<body>
+    <h1>Testing Auto-Population</h1>
+    <div>
+        <label>Profile Name:</label>
+        <input type="text" id="profileName" />
+    </div>
+    <div>
+        <label>Profile ID:</label>
+        <div id="profileId">Loading...</div>
+    </div>
+    <div>
+        <label>Date of Birth:</label>
+        <input type="date" id="dateOfBirth" />
+    </div>
+    <div>
+        <button onclick="testLoadProfile()">Load Profile Data</button>
+    </div>
+    <div>
+        <h3>Debug Output:</h3>
+        <pre id="debug"></pre>
+    </div>
+
+    <script>
+        function testLoadProfile() {
+            console.log('Testing profile loading...');
+            document.getElementById('debug').textContent = 'Loading...';
+            
+            fetch('php/get-profile.php')
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Profile data received:', data);
+                    document.getElementById('debug').textContent = JSON.stringify(data, null, 2);
+                    
+                    if (data.success && data.user) {
+                        const user = data.user;
+                        
+                        // Set profile name
+                        document.getElementById('profileName').value = `${user.first_name} ${user.last_name}`;
+                        
+                        // Set profile ID
+                        document.getElementById('profileId').textContent = `Profile ID: ${user.profile_id}`;
+                        
+                        // Set date of birth
+                        if (user.date_of_birth) {
+                            document.getElementById('dateOfBirth').value = user.date_of_birth;
+                        }
+                        
+                        console.log('Fields populated successfully');
+                    } else {
+                        console.error('Failed to load profile:', data.message);
+                        alert('Error: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    document.getElementById('debug').textContent = 'Error: ' + error.message;
+                });
+        }
+        
+        // Auto-load on page load
+        window.addEventListener('load', testLoadProfile);
+    </script>
+</body>
+</html>

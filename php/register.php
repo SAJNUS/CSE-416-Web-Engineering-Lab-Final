@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start session at the beginning
 require_once 'config.php';
 
 header('Content-Type: application/json');
@@ -25,6 +26,9 @@ try {
         'password' => $_POST['password'] ?? '',
         'confirmPassword' => $_POST['confirmPassword'] ?? ''
     ];
+    
+    // Log registration attempt for debugging
+    error_log("Registration attempt for email: " . $userData['email']);
     
     // Validation
     $errors = [];

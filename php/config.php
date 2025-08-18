@@ -58,10 +58,17 @@ class User {
     public function register($userData) {
         try {
             // Check if email already exists
-            $stmt = $this->db->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt = $this->db->prepare("SELECT id, email, first_name, last_name FROM users WHERE email = ?");
             $stmt->execute([$userData['email']]);
-            if ($stmt->rowCount() > 0) {
-                return ['success' => false, 'message' => 'Email already registered'];
+            $existingUser = $stmt->fetch();
+            
+            if ($existingUser) {
+                error_log("Registration attempt with existing email: " . $userData['email'] . " (belongs to: " . $existingUser['first_name'] . " " . $existingUser['last_name'] . ")");
+                return [
+                    'success' => false, 
+                    'message' => 'This email address is already registered. Please use a different email or try logging in.',
+                    'existing_user' => $existingUser['first_name'] . ' ' . $existingUser['last_name']
+                ];
             }
             
             // Hash password
@@ -90,10 +97,25 @@ class User {
                 $hashedPassword
             ]);
             
+            // Get the newly created user ID
+            $userId = $this->db->lastInsertId();
+            
+            // Start session for the new user
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['user_id'] = $userId;
+            $_SESSION['profile_id'] = $profileId;
+            $_SESSION['user_name'] = $userData['firstName'] . ' ' . $userData['lastName'];
+            $_SESSION['email'] = $userData['email'];
+            
+            error_log("Registration successful for " . $userData['email'] . " with profile ID: " . $profileId);
+            
             return [
                 'success' => true, 
                 'message' => 'Registration successful',
-                'profile_id' => $profileId
+                'profile_id' => $profileId,
+                'redirect' => 'profile-form.html'
             ];
             
         } catch (Exception $e) {
@@ -114,15 +136,18 @@ class User {
             $user = $stmt->fetch();
             
             if (!$user) {
-                return ['success' => false, 'message' => 'User not found'];
+                error_log("Login attempt failed: User not found for " . $emailOrProfileId);
+                return ['success' => false, 'message' => 'No account found with this email or profile ID. Please check your credentials or register a new account.'];
             }
             
             if ($user['status'] !== 'active') {
-                return ['success' => false, 'message' => 'Account is not active'];
+                error_log("Login attempt failed: Account not active for " . $emailOrProfileId);
+                return ['success' => false, 'message' => 'Your account is not active. Please contact support.'];
             }
             
             if (!password_verify($password, $user['password'])) {
-                return ['success' => false, 'message' => 'Invalid password'];
+                error_log("Login attempt failed: Invalid password for " . $emailOrProfileId);
+                return ['success' => false, 'message' => 'Incorrect password. Please check your password and try again.'];
             }
             
             // Update last login
@@ -130,12 +155,15 @@ class User {
             $stmt->execute([$user['id']]);
             
             // Start session
-            session_start();
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['profile_id'] = $user['profile_id'];
             $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
             $_SESSION['email'] = $user['email'];
             
+            error_log("Login successful for " . $emailOrProfileId);
             return [
                 'success' => true, 
                 'message' => 'Login successful',
@@ -144,7 +172,7 @@ class User {
             
         } catch (Exception $e) {
             error_log("Login error: " . $e->getMessage());
-            return ['success' => false, 'message' => 'Login failed'];
+            return ['success' => false, 'message' => 'Login failed due to a system error. Please try again.'];
         }
     }
     

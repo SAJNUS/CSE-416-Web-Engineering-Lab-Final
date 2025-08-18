@@ -228,10 +228,10 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showMessage('Registration successful! Please check your email for verification.', 'success');
+                    showMessage('Registration successful! Redirecting to complete your profile...', 'success');
                     setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 2000);
+                        window.location.href = 'profile-form.html';
+                    }, 1500);
                 } else {
                     showMessage(data.message || 'Registration failed. Please try again.');
                 }

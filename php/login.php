@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start session at the beginning
 require_once 'config.php';
 
 header('Content-Type: application/json');

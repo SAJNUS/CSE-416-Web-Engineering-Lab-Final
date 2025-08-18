@@ -15,11 +15,11 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Get JSON input
-$input = json_decode(file_get_contents('php://input'), true);
+// Get form data from POST request
+$input = $_POST;
 
-if (!$input) {
-    echo json_encode(['success' => false, 'message' => 'Invalid input data']);
+if (empty($input)) {
+    echo json_encode(['success' => false, 'message' => 'No form data received']);
     exit;
 }
 

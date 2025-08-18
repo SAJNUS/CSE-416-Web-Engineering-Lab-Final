@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .profile-form-container {
-            background: #f5f5f5;
+            background: #f5f5f5 !important;
             min-height: 100vh;
             padding: 80px 0 20px 0;
         }
@@ -152,6 +152,7 @@
         
         .form-content {
             padding: 30px;
+            background: white !important;
         }
         
         .form-section {
@@ -207,6 +208,27 @@
             outline: none;
             border-color: #93B219;
             box-shadow: 0 0 0 2px rgba(147, 178, 25, 0.1);
+        }
+        
+        /* Override browser default validation styles */
+        .form-group input:invalid,
+        .form-group select:invalid,
+        .form-group textarea:invalid {
+            border-color: #e0e0e0 !important;
+            box-shadow: none !important;
+        }
+        
+        .form-group input:required,
+        .form-group select:required,
+        .form-group textarea:required {
+            border-color: #e0e0e0 !important;
+            box-shadow: none !important;
+        }
+        
+        /* Ensure no red styling from browser defaults */
+        input, select, textarea {
+            border-color: #e0e0e0 !important;
+            background-color: white !important;
         }
         
         .form-group textarea {
@@ -620,84 +642,156 @@
             photoVerification.innerHTML = '<i class="fas fa-check" style="color: green;"></i> Photo Added';
         }
 
-        // Load user data on page load
+        // Load user data when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            // Load user basic info from session/local storage
-            const userName = sessionStorage.getItem('userName') || 'Your Name';
-            const userId = sessionStorage.getItem('userId') || Math.random().toString(36).substr(2, 9).toUpperCase();
-            
-            document.getElementById('profileName').value = userName;
-            document.getElementById('profileId').textContent = `Profile ID: B372673`; // You can make this dynamic
-            
-            // Load existing profile data if available
-            loadExistingProfile();
+            loadUserProfile();
         });
 
-        // Load existing profile data
-        function loadExistingProfile() {
+        // Function to load and auto-populate user profile data
+        function loadUserProfile() {
             fetch('php/get-profile.php')
                 .then(response => response.json())
                 .then(data => {
+                    console.log('Profile data received:', data); // Debug log
                     if (data.success) {
-                        // Update user info in sidebar with signup data
-                        if (data.user) {
-                            const fullName = `${data.user.first_name} ${data.user.last_name}`;
-                            document.getElementById('profileName').value = fullName;
-                            document.getElementById('profileName').readOnly = true;
-                            document.getElementById('profileName').style.backgroundColor = '#f8f9fa';
-                            document.getElementById('profileId').textContent = 
-                                `Profile ID: ${data.user.profile_id}`;
-                            
-                            // Auto-populate form fields with signup data
-                            // Date of Birth from signup
-                            if (data.user.date_of_birth) {
-                                document.getElementById('dateOfBirth').value = data.user.date_of_birth;
-                                // Make it readonly since it's from signup
-                                document.getElementById('dateOfBirth').readOnly = true;
-                                document.getElementById('dateOfBirth').style.backgroundColor = '#f8f9fa';
+                        const user = data.user;
+                        const profile = data.profile;
+                        
+                        // Auto-populate basic registration data
+                        if (user) {
+                            // Set profile name
+                            const profileNameField = document.getElementById('profileName');
+                            if (profileNameField) {
+                                profileNameField.value = `${user.first_name} ${user.last_name}`;
                             }
                             
-                            // Religion from signup
-                            if (data.user.religion) {
-                                // Check if religion field exists in the form
-                                const religionField = document.getElementById('religion');
-                                if (religionField) {
-                                    religionField.value = data.user.religion;
-                                    // Make it readonly or add a note
-                                    religionField.readOnly = true;
-                                    religionField.style.backgroundColor = '#f8f9fa';
+                            // Set profile ID
+                            const profileIdElement = document.getElementById('profileId');
+                            if (profileIdElement) {
+                                profileIdElement.textContent = `Profile ID: ${user.profile_id}`;
+                            }
+                            
+                            // Auto-populate date of birth from registration
+                            if (user.date_of_birth) {
+                                const dobField = document.getElementById('dateOfBirth');
+                                if (dobField) {
+                                    dobField.value = user.date_of_birth;
+                                    dobField.readOnly = true;
+                                    dobField.style.backgroundColor = '#f8f9fa';
+                                    dobField.title = 'Auto-filled from registration data';
+                                    console.log('Date of birth auto-populated:', user.date_of_birth);
                                 }
                             }
+                            
+                            // Auto-populate religion from registration
+                            if (user.religion) {
+                                const religionField = document.getElementById('religion');
+                                if (religionField) {
+                                    religionField.value = user.religion.charAt(0).toUpperCase() + user.religion.slice(1);
+                                    religionField.readOnly = true;
+                                    religionField.style.backgroundColor = '#f8f9fa';
+                                    religionField.title = 'Auto-filled from registration data';
+                                    console.log('Religion auto-populated:', user.religion);
+                                }
+                            }
+                            
+                            console.log('Basic registration data auto-populated successfully');
                         }
                         
-                        // Populate form with existing profile data (if any)
-                        if (data.profile && Object.keys(data.profile).length > 0) {
-                            populateForm(data.profile);
-                            
-                            // Show existing photo if available
-                            if (data.profile.photo_url) {
-                                const photoDiv = document.querySelector('.profile-photo');
-                                photoDiv.innerHTML = `<img src="${data.profile.photo_url}" alt="Profile Photo">`;
-                                updateVerificationStatus();
-                            }
+                        // If profile data exists, populate the form with saved data
+                        if (profile && Object.keys(profile).length > 0) {
+                            populateFormWithProfile(profile);
+                            console.log('Populated with existing profile data');
+                        } else {
+                            console.log('No existing profile data found - user can fill the form fresh');
                         }
                     } else {
-                        console.error('Error loading profile:', data.message);
+                        console.error('Failed to load user profile:', data.message);
+                        // If user is not logged in, redirect to login
+                        if (data.message === 'User not logged in') {
+                            alert('Please log in to access your profile.');
+                            window.location.href = 'index.html';
+                        }
                     }
                 })
                 .catch(error => {
-                    console.error('Error loading profile:', error);
+                    console.error('Error loading user profile:', error);
+                    alert('Error loading profile data. Please refresh the page.');
                 });
         }
 
-        // Populate form with existing data
-        function populateForm(data) {
-            Object.keys(data).forEach(key => {
+        // Function to populate form with existing profile data
+        function populateFormWithProfile(profile) {
+            // Populate all form fields with existing profile data
+            Object.keys(profile).forEach(key => {
                 const element = document.getElementById(key) || document.querySelector(`[name="${key}"]`);
-                if (element) {
-                    element.value = data[key];
+                if (element && profile[key]) {
+                    if (element.type === 'checkbox') {
+                        element.checked = profile[key] === '1' || profile[key] === 'true';
+                    } else {
+                        element.value = profile[key];
+                    }
                 }
             });
+        }
+
+        // Photo upload handling
+        function handlePhotoUpload(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const photoContainer = document.querySelector('.profile-photo');
+                    photoContainer.innerHTML = `<img src="${e.target.result}" alt="Profile Photo">`;
+                };
+                
+                reader.readAsDataURL(file);
+                
+                // Upload to server
+                const formData = new FormData();
+                formData.append('photo', file);
+                
+                fetch('php/upload-photo.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Photo uploaded successfully');
+                    } else {
+                        console.error('Photo upload failed:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error uploading photo:', error);
+                });
+            }
+        }
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show selected section
+            const selectedSection = document.getElementById(tabName);
+            if (selectedSection) {
+                selectedSection.classList.add('active');
+            }
+            
+            // Add active class to clicked tab button
+            event.target.classList.add('active');
         }
 
         // Form submission
@@ -705,30 +799,21 @@
             e.preventDefault();
             
             const formData = new FormData(this);
-            const profileData = {};
-            
-            formData.forEach((value, key) => {
-                profileData[key] = value;
-            });
             
             // Add the name from the sidebar
-            profileData['profile_name'] = document.getElementById('profileName').value;
-            
-            // Save to local storage (in real app, send to server)
-            localStorage.setItem('userProfile', JSON.stringify(profileData));
+            formData.append('profile_name', document.getElementById('profileName').value);
             
             // Submit to server
             fetch('php/update-profile.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(profileData)
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
                     alert('Profile updated successfully!');
+                    // Optionally redirect to profile view
+                    // window.location.href = 'profile-view.html';
                 } else {
                     alert('Error updating profile: ' + data.message);
                 }
